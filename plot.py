@@ -7,12 +7,17 @@ import matplotlib.pyplot as plt
 from sdmm import MatDot, SimpleOPP
 
 # rounds to do
-ROUNDS = 100
+ROUNDS = 500
+t, s, r = 36, 36, 36
 
-
-def compute_errors(deltas, sdmm_algorithm, rounds=ROUNDS):
+def compute_errors(rel_deltas, sdmm_algorithm, rounds=ROUNDS):
 
     print(f"Starting {sdmm_algorithm}")
+
+    # compute entropy of input and normalize the deltas
+    hA = 0.5 * t * s * log2(2 * pi * e * 1.0 ** 2)
+    hB = 0.5 * s * r * log2(2 * pi * e * 1.0 ** 2)
+    deltas = rel_deltas * (hA + hB)
 
     # mean error for each delta
     ave_errors = []
@@ -38,142 +43,115 @@ def compute_errors(deltas, sdmm_algorithm, rounds=ROUNDS):
         ave_errors.append(err)
 
         print(delta, err)
-    
+
     print()
     return ave_errors
 
 
-"""
-# parameters
-t, s, r = 100, 100, 100
-p = 10
-X = 1
-K = 2 * p + 2 * X - 1
+def plot_errors(ax, rel_deltas, sdmm_algorithm, *args, **kwargs):
+    err = compute_errors(rel_deltas, sdmm_algorithm)
+    return ax.loglog(rel_deltas, err, *args, **kwargs)
+
+
+# Varying number of colluding servers
 
 # relative information leakages
 rel_deltas = np.logspace(-10, -5, 6)
 
-# compute entropy of input and normalize the deltas
-hA = 0.5 * t * s * log2(2 * pi * e * 1.0 ** 2)
-hB = 0.5 * s * r * log2(2 * pi * e * 1.0 ** 2)
-deltas = rel_deltas * (hA + hB)
+fig, (ax1, ax2) = plt.subplots(
+    1, 2, sharey=True, tight_layout=True, frameon=False, dpi=200.0
+)
 
-err0 = compute_errors(deltas, MatDot(p=p, X=X, N=K + 0))
-err1 = compute_errors(deltas, MatDot(p=p, X=X, N=K + 1))
-err2 = compute_errors(deltas, MatDot(p=p, X=X, N=K + 2))
-err3 = compute_errors(deltas, MatDot(p=p, X=X, N=K + 3))
-err4 = compute_errors(deltas, MatDot(p=p, X=X, N=K + 4))
+plot_errors(ax1, rel_deltas, MatDot(p=4, X=1), "b.-")
+plot_errors(ax1, rel_deltas, MatDot(p=4, X=2), "b.--")
+plot_errors(ax1, rel_deltas, MatDot(p=4, X=3), "b.-.")
+plot_errors(ax1, rel_deltas, MatDot(p=4, X=4), "b.:")
 
-plt.loglog(rel_deltas, err0, "x-", label="0 stragglers")
-plt.loglog(rel_deltas, err1, "x-", label="1 straggler")
-plt.loglog(rel_deltas, err2, "x-", label="2 stragglers")
-plt.loglog(rel_deltas, err3, "x-", label="3 stragglers")
-plt.loglog(rel_deltas, err4, "x-", label="4 stragglers")
+plot_errors(ax1, rel_deltas, SimpleOPP(m=2, n=2, X=1), "r.-")
+plot_errors(ax1, rel_deltas, SimpleOPP(m=2, n=2, X=2), "r.--")
+plot_errors(ax1, rel_deltas, SimpleOPP(m=2, n=2, X=3), "r.-.")
+plot_errors(ax1, rel_deltas, SimpleOPP(m=2, n=2, X=4), "r.:")
 
-plt.grid()
-plt.legend()
-plt.title(f"Relative information leakage vs. mean Frobenius norm of error")
-plt.xlabel("relative information leakage")
-plt.ylabel("error")
+ax1.loglog([], [], "k.-", label="1 colluding")
+ax1.loglog([], [], "k.--", label="2 colluding")
+ax1.loglog([], [], "k.-.", label="3 colluding")
+ax1.loglog([], [], "k.:", label="4 colluding")
+
+ax1.grid()
+ax1.legend()
+ax1.set_xlabel("relative information leakage")
+ax1.set_ylabel("error")
+
+plot_errors(ax2, rel_deltas, MatDot(p=9, X=1), "b.-")
+plot_errors(ax2, rel_deltas, MatDot(p=9, X=2), "b.--")
+plot_errors(ax2, rel_deltas, MatDot(p=9, X=3), "b.-.")
+plot_errors(ax2, rel_deltas, MatDot(p=9, X=4), "b.:")
+
+plot_errors(ax2, rel_deltas, SimpleOPP(m=3, n=3, X=1), "r.-")
+plot_errors(ax2, rel_deltas, SimpleOPP(m=3, n=3, X=2), "r.--")
+plot_errors(ax2, rel_deltas, SimpleOPP(m=3, n=3, X=3), "r.-.")
+plot_errors(ax2, rel_deltas, SimpleOPP(m=3, n=3, X=4), "r.:")
+
+ax2.loglog([], [], "k.-", label="1 colluding")
+ax2.loglog([], [], "k.--", label="2 colluding")
+ax2.loglog([], [], "k.-.", label="3 colluding")
+ax2.loglog([], [], "k.:", label="4 colluding")
+
+ax2.grid()
+ax2.legend()
+ax2.set_xlabel("relative information leakage")
+ax2.set_ylabel("error")
+
 plt.savefig("plot.eps")
 plt.show()
-"""
+
 
 """
-# parameters
-t, s, r = 100, 100, 100
-m = n = 4
-X = 1
-K = 2 * m * n + 2 * X - 1
+# varying number of straggling servers
 
 # relative information leakages
 rel_deltas = np.logspace(-10, -5, 6)
 
-# compute entropy of input and normalize the deltas
-hA = 0.5 * t * s * log2(2 * pi * e * 1.0 ** 2)
-hB = 0.5 * s * r * log2(2 * pi * e * 1.0 ** 2)
-deltas = rel_deltas * (hA + hB)
+fig, (ax1, ax2) = plt.subplots(
+    1, 2, sharey=True, tight_layout=True, frameon=False, dpi=200.0
+)
 
-err0 = compute_errors(deltas, SimpleOPP(m=m, n=n, X=X, N=K + 0))
-err1 = compute_errors(deltas, SimpleOPP(m=m, n=n, X=X, N=K + 1))
-err2 = compute_errors(deltas, SimpleOPP(m=m, n=n, X=X, N=K + 2))
-err3 = compute_errors(deltas, SimpleOPP(m=m, n=n, X=X, N=K + 3))
-err4 = compute_errors(deltas, SimpleOPP(m=m, n=n, X=X, N=K + 4))
+plot_errors(ax1, rel_deltas, MatDot(p=4, X=3, N=13), "b.-")
+plot_errors(ax1, rel_deltas, MatDot(p=4, X=3, N=14), "b.--")
+plot_errors(ax1, rel_deltas, MatDot(p=4, X=3, N=15), "b.-.")
 
-plt.loglog(rel_deltas, err0, "x-", label="0 stragglers")
-plt.loglog(rel_deltas, err1, "x-", label="1 straggler")
-plt.loglog(rel_deltas, err2, "x-", label="2 stragglers")
-plt.loglog(rel_deltas, err3, "x-", label="3 stragglers")
-plt.loglog(rel_deltas, err4, "x-", label="4 stragglers")
+plot_errors(ax1, rel_deltas, SimpleOPP(m=2, n=2, X=3, N=13), "r.-")
+plot_errors(ax1, rel_deltas, SimpleOPP(m=2, n=2, X=3, N=14), "r.--")
+plot_errors(ax1, rel_deltas, SimpleOPP(m=2, n=2, X=3, N=15), "r.-.")
 
-plt.grid()
-plt.legend()
-plt.title(f"Relative information leakage vs. mean Frobenius norm of error")
-plt.xlabel("relative information leakage")
-plt.ylabel("error")
+ax1.loglog([], [], "k.-", label="0 straggling")
+ax1.loglog([], [], "k.--", label="1 straggling")
+ax1.loglog([], [], "k.-.", label="2 straggling")
+
+ax1.grid()
+ax1.set_aspect("equal")
+ax1.legend()
+ax1.set_xlabel("relative information leakage")
+ax1.set_ylabel("error")
+
+plot_errors(ax2, rel_deltas, MatDot(p=9, X=2, N=21), "b.-")
+plot_errors(ax2, rel_deltas, MatDot(p=9, X=2, N=22), "b.--")
+plot_errors(ax2, rel_deltas, MatDot(p=9, X=2, N=23), "b.-.")
+
+plot_errors(ax2, rel_deltas, SimpleOPP(m=3, n=3, X=2, N=21), "r.-")
+plot_errors(ax2, rel_deltas, SimpleOPP(m=3, n=3, X=2, N=22), "r.--")
+plot_errors(ax2, rel_deltas, SimpleOPP(m=3, n=3, X=2, N=23), "r.-.")
+
+ax2.loglog([], [], "k.-", label="0 straggling")
+ax2.loglog([], [], "k.--", label="1 straggling")
+ax2.loglog([], [], "k.-.", label="2 straggling")
+
+ax2.grid()
+ax2.set_aspect("equal")
+ax2.legend()
+ax2.set_xlabel("relative information leakage")
+ax2.set_ylabel("error")
+
 plt.savefig("plot.eps")
 plt.show()
 """
-
-"""
-# parameters
-t, s, r = 100, 100, 100
-m = n = 2
-p = m * n
-X = 3
-K = 2 * p + 2 * X - 1
-
-# relative information leakages
-rel_deltas = np.logspace(-10, -5, 6)
-
-# compute entropy of input and normalize the deltas
-hA = 0.5 * t * s * log2(2 * pi * e * 1.0 ** 2)
-hB = 0.5 * s * r * log2(2 * pi * e * 1.0 ** 2)
-deltas = rel_deltas * (hA + hB)
-
-err1 = compute_errors(deltas, MatDot(p=p, X=X, N=K))
-err2 = compute_errors(deltas, SimpleOPP(m=m, n=n, X=X, N=K))
-
-plt.loglog(rel_deltas, err1, "x-", label="MatDot")
-plt.loglog(rel_deltas, err2, "x-", label="SimpleOPP")
-
-plt.grid()
-plt.legend()
-plt.title(f"Relative information leakage vs. mean Frobenius norm of error")
-plt.xlabel("relative information leakage")
-plt.ylabel("error")
-plt.savefig("plot.eps")
-plt.show()
-"""
-
-# parameters
-t, s, r = 120, 120, 120
-m = n = 2
-p = m * n
-X = 3
-K = 2 * p + 2 * X - 1
-
-# relative information leakages
-rel_deltas = np.logspace(-10, -5, 6)
-
-# compute entropy of input and normalize the deltas
-hA = 0.5 * t * s * log2(2 * pi * e * 1.0 ** 2)
-hB = 0.5 * s * r * log2(2 * pi * e * 1.0 ** 2)
-deltas = rel_deltas * (hA + hB)
-
-err10 = compute_errors(deltas, MatDot(p=1, X=1))
-err11 = compute_errors(deltas, MatDot(p=2, X=2))
-err12 = compute_errors(deltas, MatDot(p=3, X=3))
-err13 = compute_errors(deltas, MatDot(p=4, X=4))
-
-plt.loglog(rel_deltas, err10, "bx-", label="p = 1")
-plt.loglog(rel_deltas, err11, "bx--", label="p = 2")
-plt.loglog(rel_deltas, err12, "bx-.", label="p = 3")
-plt.loglog(rel_deltas, err13, "bx:", label="p = 4")
-
-plt.grid()
-plt.legend()
-plt.xlabel("relative information leakage")
-plt.ylabel("error")
-plt.savefig("plot.eps")
-plt.show()
