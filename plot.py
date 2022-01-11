@@ -7,7 +7,9 @@ import matplotlib.pyplot as plt
 from sdmm import MatDot, SimpleOPP
 
 # rounds to do
-ROUNDS = 500
+ROUNDS = 1000
+
+# sizes of matrices, A is t x s, B is s x r
 t, s, r = 36, 36, 36
 
 def compute_errors(rel_deltas, sdmm_algorithm, rounds=ROUNDS):
@@ -52,7 +54,7 @@ def plot_errors(ax, rel_deltas, sdmm_algorithm, *args, **kwargs):
     err = compute_errors(rel_deltas, sdmm_algorithm)
     return ax.loglog(rel_deltas, err, *args, **kwargs)
 
-
+"""
 # Varying number of colluding servers
 
 # relative information leakages
@@ -104,9 +106,9 @@ ax2.set_ylabel("error")
 
 plt.savefig("plot.eps")
 plt.show()
-
-
 """
+
+
 # varying number of straggling servers
 
 # relative information leakages
@@ -154,4 +156,3 @@ ax2.set_ylabel("error")
 
 plt.savefig("plot.eps")
 plt.show()
-"""

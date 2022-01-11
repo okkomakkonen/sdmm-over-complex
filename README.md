@@ -8,7 +8,7 @@ Install the dependencies with
 python -m pip install -r requirements.txt
 ```
 
-The script `plot.py` generates a plot based on the parameters described in the document. It can be run with
+The script `plot.py` generates a plot based on the parameters described in the file. It can be run with
 
 ```bash
 python plot.py
