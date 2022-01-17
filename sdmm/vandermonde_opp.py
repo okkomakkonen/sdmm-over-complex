@@ -1,4 +1,4 @@
-"""Implement a simple version of simple OPP over the complex numbers"""
+"""Implement a simple version of Vandemonde OPP scheme over the complex numbers"""
 
 from math import pi, sqrt, log
 from random import sample
@@ -8,7 +8,7 @@ import numpy as np
 from .utils import circular_complex_normal, partition_matrix
 
 
-class SimpleOPP:
+class VandermondeOPP:
     def __init__(self, m, n, X, N=None, delta=None):
         # set internal variables
         self.m = m
@@ -47,7 +47,7 @@ class SimpleOPP:
 
     def __str__(self):
 
-        return f"SimpleOPP(m={self.m}, n={self.n}, X={self.X}, N={self.N})"
+        return f"VandermondeOPP(m={self.m}, n={self.n}, X={self.X}, N={self.N})"
 
     def __call__(self, A, B, delta=None):
 

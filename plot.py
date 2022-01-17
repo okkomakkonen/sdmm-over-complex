@@ -1,16 +1,19 @@
+"""This script plots the security vs. numerical error plots for different SDMM schemes"""
+
 from math import pi, e, log2
-from statistics import fmean, stdev
+from statistics import fmean
 
 import numpy as np
 import matplotlib.pyplot as plt
 
-from sdmm import MatDot, SimpleOPP
+from sdmm import MatDot, VandermondeOPP
 
 # rounds to do
 ROUNDS = 1000
 
 # sizes of matrices, A is t x s, B is s x r
 t, s, r = 36, 36, 36
+
 
 def compute_errors(rel_deltas, sdmm_algorithm, rounds=ROUNDS):
 
@@ -54,6 +57,7 @@ def plot_errors(ax, rel_deltas, sdmm_algorithm, *args, **kwargs):
     err = compute_errors(rel_deltas, sdmm_algorithm)
     return ax.loglog(rel_deltas, err, *args, **kwargs)
 
+
 """
 # Varying number of colluding servers
 
@@ -61,7 +65,7 @@ def plot_errors(ax, rel_deltas, sdmm_algorithm, *args, **kwargs):
 rel_deltas = np.logspace(-10, -5, 6)
 
 fig, (ax1, ax2) = plt.subplots(
-    1, 2, sharey=True, tight_layout=True, frameon=False, dpi=200.0
+    1, 2, sharey=True, tight_layout=True, frameon=False, dpi=200.0, figsize=(7, 4)
 )
 
 plot_errors(ax1, rel_deltas, MatDot(p=4, X=1), "b.-")
@@ -69,10 +73,10 @@ plot_errors(ax1, rel_deltas, MatDot(p=4, X=2), "b.--")
 plot_errors(ax1, rel_deltas, MatDot(p=4, X=3), "b.-.")
 plot_errors(ax1, rel_deltas, MatDot(p=4, X=4), "b.:")
 
-plot_errors(ax1, rel_deltas, SimpleOPP(m=2, n=2, X=1), "r.-")
-plot_errors(ax1, rel_deltas, SimpleOPP(m=2, n=2, X=2), "r.--")
-plot_errors(ax1, rel_deltas, SimpleOPP(m=2, n=2, X=3), "r.-.")
-plot_errors(ax1, rel_deltas, SimpleOPP(m=2, n=2, X=4), "r.:")
+plot_errors(ax1, rel_deltas, VandermondeOPP(m=2, n=2, X=1), "r.-")
+plot_errors(ax1, rel_deltas, VandermondeOPP(m=2, n=2, X=2), "r.--")
+plot_errors(ax1, rel_deltas, VandermondeOPP(m=2, n=2, X=3), "r.-.")
+plot_errors(ax1, rel_deltas, VandermondeOPP(m=2, n=2, X=4), "r.:")
 
 ax1.loglog([], [], "k.-", label="1 colluding")
 ax1.loglog([], [], "k.--", label="2 colluding")
@@ -89,10 +93,10 @@ plot_errors(ax2, rel_deltas, MatDot(p=9, X=2), "b.--")
 plot_errors(ax2, rel_deltas, MatDot(p=9, X=3), "b.-.")
 plot_errors(ax2, rel_deltas, MatDot(p=9, X=4), "b.:")
 
-plot_errors(ax2, rel_deltas, SimpleOPP(m=3, n=3, X=1), "r.-")
-plot_errors(ax2, rel_deltas, SimpleOPP(m=3, n=3, X=2), "r.--")
-plot_errors(ax2, rel_deltas, SimpleOPP(m=3, n=3, X=3), "r.-.")
-plot_errors(ax2, rel_deltas, SimpleOPP(m=3, n=3, X=4), "r.:")
+plot_errors(ax2, rel_deltas, VandermondeOPP(m=3, n=3, X=1), "r.-")
+plot_errors(ax2, rel_deltas, VandermondeOPP(m=3, n=3, X=2), "r.--")
+plot_errors(ax2, rel_deltas, VandermondeOPP(m=3, n=3, X=3), "r.-.")
+plot_errors(ax2, rel_deltas, VandermondeOPP(m=3, n=3, X=4), "r.:")
 
 ax2.loglog([], [], "k.-", label="1 colluding")
 ax2.loglog([], [], "k.--", label="2 colluding")
@@ -115,16 +119,16 @@ plt.show()
 rel_deltas = np.logspace(-10, -5, 6)
 
 fig, (ax1, ax2) = plt.subplots(
-    1, 2, sharey=True, tight_layout=True, frameon=False, dpi=200.0
+    1, 2, sharey=True, tight_layout=True, frameon=False, dpi=200.0, figsize=(7, 4)
 )
 
 plot_errors(ax1, rel_deltas, MatDot(p=4, X=3, N=13), "b.-")
 plot_errors(ax1, rel_deltas, MatDot(p=4, X=3, N=14), "b.--")
 plot_errors(ax1, rel_deltas, MatDot(p=4, X=3, N=15), "b.-.")
 
-plot_errors(ax1, rel_deltas, SimpleOPP(m=2, n=2, X=3, N=13), "r.-")
-plot_errors(ax1, rel_deltas, SimpleOPP(m=2, n=2, X=3, N=14), "r.--")
-plot_errors(ax1, rel_deltas, SimpleOPP(m=2, n=2, X=3, N=15), "r.-.")
+plot_errors(ax1, rel_deltas, VandermondeOPP(m=2, n=2, X=3, N=13), "r.-")
+plot_errors(ax1, rel_deltas, VandermondeOPP(m=2, n=2, X=3, N=14), "r.--")
+plot_errors(ax1, rel_deltas, VandermondeOPP(m=2, n=2, X=3, N=15), "r.-.")
 
 ax1.loglog([], [], "k.-", label="0 straggling")
 ax1.loglog([], [], "k.--", label="1 straggling")
@@ -140,9 +144,9 @@ plot_errors(ax2, rel_deltas, MatDot(p=9, X=2, N=21), "b.-")
 plot_errors(ax2, rel_deltas, MatDot(p=9, X=2, N=22), "b.--")
 plot_errors(ax2, rel_deltas, MatDot(p=9, X=2, N=23), "b.-.")
 
-plot_errors(ax2, rel_deltas, SimpleOPP(m=3, n=3, X=2, N=21), "r.-")
-plot_errors(ax2, rel_deltas, SimpleOPP(m=3, n=3, X=2, N=22), "r.--")
-plot_errors(ax2, rel_deltas, SimpleOPP(m=3, n=3, X=2, N=23), "r.-.")
+plot_errors(ax2, rel_deltas, VandermondeOPP(m=3, n=3, X=2, N=21), "r.-")
+plot_errors(ax2, rel_deltas, VandermondeOPP(m=3, n=3, X=2, N=22), "r.--")
+plot_errors(ax2, rel_deltas, VandermondeOPP(m=3, n=3, X=2, N=23), "r.-.")
 
 ax2.loglog([], [], "k.-", label="0 straggling")
 ax2.loglog([], [], "k.--", label="1 straggling")

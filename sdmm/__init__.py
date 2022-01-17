@@ -1,2 +1,2 @@
 from .matdot import MatDot
-from .simple_opp import SimpleOPP
+from .vandermonde_opp import VandermondeOPP
