@@ -8,7 +8,7 @@ import numpy as np
 from .utils import circular_complex_normal, partition_matrix
 
 
-class VandermondeOPP:
+class AnalogGASP:
     def __init__(self, m, n, X, N=None, delta=None):
         # set internal variables
         self.m = m
@@ -47,7 +47,7 @@ class VandermondeOPP:
 
     def __str__(self):
 
-        return f"VandermondeOPP(m={self.m}, n={self.n}, X={self.X}, N={self.N})"
+        return f"AnalogGASP(m={self.m}, n={self.n}, X={self.X}, N={self.N})"
 
     def __call__(self, A, B, delta=None):
 

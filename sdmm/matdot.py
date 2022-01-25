@@ -8,7 +8,7 @@ import numpy as np
 from .utils import circular_complex_normal, partition_matrix
 
 
-class MatDot:
+class AnalogMatDot:
     def __init__(self, p, X, N=None, delta=None):
         # set internal variables
         self.p = p
@@ -44,7 +44,7 @@ class MatDot:
 
     def __str__(self):
 
-        return f"MatDot(p={self.p}, X={self.X}, N={self.N})"
+        return f"AnalogMatDot(p={self.p}, X={self.X}, N={self.N})"
 
     def __call__(self, A, B, delta=None):
 

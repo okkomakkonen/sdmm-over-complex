@@ -6,7 +6,7 @@ from statistics import fmean
 import numpy as np
 import matplotlib.pyplot as plt
 
-from sdmm import MatDot, VandermondeOPP
+from sdmm import AnalogMatDot, AnalogGASP
 
 # rounds to do
 ROUNDS = 1000
@@ -68,15 +68,15 @@ fig, (ax1, ax2) = plt.subplots(
     1, 2, sharey=True, tight_layout=True, frameon=False, dpi=200.0, figsize=(7, 4)
 )
 
-plot_errors(ax1, rel_deltas, MatDot(p=4, X=1), "b.-")
-plot_errors(ax1, rel_deltas, MatDot(p=4, X=2), "b.--")
-plot_errors(ax1, rel_deltas, MatDot(p=4, X=3), "b.-.")
-plot_errors(ax1, rel_deltas, MatDot(p=4, X=4), "b.:")
+plot_errors(ax1, rel_deltas, AnalogMatDot(p=4, X=1), "b.-")
+plot_errors(ax1, rel_deltas, AnalogMatDot(p=4, X=2), "b.--")
+plot_errors(ax1, rel_deltas, AnalogMatDot(p=4, X=3), "b.-.")
+plot_errors(ax1, rel_deltas, AnalogMatDot(p=4, X=4), "b.:")
 
-plot_errors(ax1, rel_deltas, VandermondeOPP(m=2, n=2, X=1), "r.-")
-plot_errors(ax1, rel_deltas, VandermondeOPP(m=2, n=2, X=2), "r.--")
-plot_errors(ax1, rel_deltas, VandermondeOPP(m=2, n=2, X=3), "r.-.")
-plot_errors(ax1, rel_deltas, VandermondeOPP(m=2, n=2, X=4), "r.:")
+plot_errors(ax1, rel_deltas, AnalogGASP(m=2, n=2, X=1), "r.-")
+plot_errors(ax1, rel_deltas, AnalogGASP(m=2, n=2, X=2), "r.--")
+plot_errors(ax1, rel_deltas, AnalogGASP(m=2, n=2, X=3), "r.-.")
+plot_errors(ax1, rel_deltas, AnalogGASP(m=2, n=2, X=4), "r.:")
 
 ax1.loglog([], [], "k.-", label="1 colluding")
 ax1.loglog([], [], "k.--", label="2 colluding")
@@ -88,15 +88,15 @@ ax1.legend()
 ax1.set_xlabel("relative information leakage")
 ax1.set_ylabel("error")
 
-plot_errors(ax2, rel_deltas, MatDot(p=9, X=1), "b.-")
-plot_errors(ax2, rel_deltas, MatDot(p=9, X=2), "b.--")
-plot_errors(ax2, rel_deltas, MatDot(p=9, X=3), "b.-.")
-plot_errors(ax2, rel_deltas, MatDot(p=9, X=4), "b.:")
+plot_errors(ax2, rel_deltas, AnalogMatDot(p=9, X=1), "b.-")
+plot_errors(ax2, rel_deltas, AnalogMatDot(p=9, X=2), "b.--")
+plot_errors(ax2, rel_deltas, AnalogMatDot(p=9, X=3), "b.-.")
+plot_errors(ax2, rel_deltas, AnalogMatDot(p=9, X=4), "b.:")
 
-plot_errors(ax2, rel_deltas, VandermondeOPP(m=3, n=3, X=1), "r.-")
-plot_errors(ax2, rel_deltas, VandermondeOPP(m=3, n=3, X=2), "r.--")
-plot_errors(ax2, rel_deltas, VandermondeOPP(m=3, n=3, X=3), "r.-.")
-plot_errors(ax2, rel_deltas, VandermondeOPP(m=3, n=3, X=4), "r.:")
+plot_errors(ax2, rel_deltas, AnalogGASP(m=3, n=3, X=1), "r.-")
+plot_errors(ax2, rel_deltas, AnalogGASP(m=3, n=3, X=2), "r.--")
+plot_errors(ax2, rel_deltas, AnalogGASP(m=3, n=3, X=3), "r.-.")
+plot_errors(ax2, rel_deltas, AnalogGASP(m=3, n=3, X=4), "r.:")
 
 ax2.loglog([], [], "k.-", label="1 colluding")
 ax2.loglog([], [], "k.--", label="2 colluding")
@@ -122,13 +122,13 @@ fig, (ax1, ax2) = plt.subplots(
     1, 2, sharey=True, tight_layout=True, frameon=False, dpi=200.0, figsize=(7, 4)
 )
 
-plot_errors(ax1, rel_deltas, MatDot(p=4, X=3, N=13), "b.-")
-plot_errors(ax1, rel_deltas, MatDot(p=4, X=3, N=14), "b.--")
-plot_errors(ax1, rel_deltas, MatDot(p=4, X=3, N=15), "b.-.")
+plot_errors(ax1, rel_deltas, AnalogMatDot(p=4, X=3, N=13), "b.-")
+plot_errors(ax1, rel_deltas, AnalogMatDot(p=4, X=3, N=14), "b.--")
+plot_errors(ax1, rel_deltas, AnalogMatDot(p=4, X=3, N=15), "b.-.")
 
-plot_errors(ax1, rel_deltas, VandermondeOPP(m=2, n=2, X=3, N=13), "r.-")
-plot_errors(ax1, rel_deltas, VandermondeOPP(m=2, n=2, X=3, N=14), "r.--")
-plot_errors(ax1, rel_deltas, VandermondeOPP(m=2, n=2, X=3, N=15), "r.-.")
+plot_errors(ax1, rel_deltas, AnalogGASP(m=2, n=2, X=3, N=13), "r.-")
+plot_errors(ax1, rel_deltas, AnalogGASP(m=2, n=2, X=3, N=14), "r.--")
+plot_errors(ax1, rel_deltas, AnalogGASP(m=2, n=2, X=3, N=15), "r.-.")
 
 ax1.loglog([], [], "k.-", label="0 straggling")
 ax1.loglog([], [], "k.--", label="1 straggling")
@@ -140,13 +140,13 @@ ax1.legend()
 ax1.set_xlabel("relative information leakage")
 ax1.set_ylabel("error")
 
-plot_errors(ax2, rel_deltas, MatDot(p=9, X=2, N=21), "b.-")
-plot_errors(ax2, rel_deltas, MatDot(p=9, X=2, N=22), "b.--")
-plot_errors(ax2, rel_deltas, MatDot(p=9, X=2, N=23), "b.-.")
+plot_errors(ax2, rel_deltas, AnalogMatDot(p=9, X=2, N=21), "b.-")
+plot_errors(ax2, rel_deltas, AnalogMatDot(p=9, X=2, N=22), "b.--")
+plot_errors(ax2, rel_deltas, AnalogMatDot(p=9, X=2, N=23), "b.-.")
 
-plot_errors(ax2, rel_deltas, VandermondeOPP(m=3, n=3, X=2, N=21), "r.-")
-plot_errors(ax2, rel_deltas, VandermondeOPP(m=3, n=3, X=2, N=22), "r.--")
-plot_errors(ax2, rel_deltas, VandermondeOPP(m=3, n=3, X=2, N=23), "r.-.")
+plot_errors(ax2, rel_deltas, AnalogGASP(m=3, n=3, X=2, N=21), "r.-")
+plot_errors(ax2, rel_deltas, AnalogGASP(m=3, n=3, X=2, N=22), "r.--")
+plot_errors(ax2, rel_deltas, AnalogGASP(m=3, n=3, X=2, N=23), "r.-.")
 
 ax2.loglog([], [], "k.-", label="0 straggling")
 ax2.loglog([], [], "k.--", label="1 straggling")

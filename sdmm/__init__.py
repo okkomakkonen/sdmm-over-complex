@@ -1,2 +1,2 @@
-from .matdot import MatDot
-from .vandermonde_opp import VandermondeOPP
+from .matdot import AnalogMatDot
+from .analog_gasp import AnalogGASP
