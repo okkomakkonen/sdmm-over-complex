@@ -111,7 +111,7 @@ ax2.set_ylabel("error")
 plt.savefig("plot.eps")
 plt.show()
 """
-
+"""
 
 # varying number of straggling servers
 
@@ -157,6 +157,140 @@ ax2.set_aspect("equal")
 ax2.legend()
 ax2.set_xlabel("relative information leakage")
 ax2.set_ylabel("error")
+
+plt.savefig("plot.eps")
+plt.show()
+"""
+
+fig, (ax1, ax2) = plt.subplots(
+    1, 2, sharey=True, tight_layout=True, frameon=False, dpi=200.0, figsize=(7, 4)
+)
+
+colluding = list(range(1, 11))
+
+rel_delta = 1e-8
+hA = 0.5 * t * s * log2(2 * pi * e * 1.0 ** 2)
+hB = 0.5 * s * r * log2(2 * pi * e * 1.0 ** 2)
+delta = rel_delta * (hA + hB)
+
+# mean error for each delta
+ave_errors = []
+
+# raw data of all errors
+errors = []
+
+for X in colluding:
+
+    sdmm_algorithm = AnalogMatDot(p=4, X=X)
+
+    errs = []
+
+    for _ in range(ROUNDS):
+
+        A = np.random.normal(loc=0.0, scale=1.0, size=(t, s))
+        B = np.random.normal(loc=0.0, scale=1.0, size=(s, r))
+
+        C = sdmm_algorithm(A, B, delta=delta)
+
+        errs.append(np.linalg.norm(A @ B - C, "fro"))
+
+    errors.append(errs)
+    err = fmean(errs)
+    ave_errors.append(err)
+
+ax1.semilogy(colluding, ave_errors, "r.-", label=r"$p=4$")
+
+# mean error for each delta
+ave_errors = []
+
+# raw data of all errors
+errors = []
+
+for X in colluding:
+
+    sdmm_algorithm = AnalogMatDot(p=9, X=X)
+
+    errs = []
+
+    for _ in range(ROUNDS):
+
+        A = np.random.normal(loc=0.0, scale=1.0, size=(t, s))
+        B = np.random.normal(loc=0.0, scale=1.0, size=(s, r))
+
+        C = sdmm_algorithm(A, B, delta=delta)
+
+        errs.append(np.linalg.norm(A @ B - C, "fro"))
+
+    errors.append(errs)
+    err = fmean(errs)
+    ave_errors.append(err)
+
+ax1.semilogy(colluding, ave_errors, "r.--", label=r"$p=9$")
+
+ax1.set_xlabel("colluding workers (X)")
+ax1.set_ylabel("error")
+ax1.grid()
+ax1.legend(loc="lower right")
+
+
+# mean error for each delta
+ave_errors = []
+
+# raw data of all errors
+errors = []
+
+for X in colluding:
+
+    sdmm_algorithm = AnalogGASP(m=2, n=2, X=X)
+
+    errs = []
+
+    for _ in range(ROUNDS):
+
+        A = np.random.normal(loc=0.0, scale=1.0, size=(t, s))
+        B = np.random.normal(loc=0.0, scale=1.0, size=(s, r))
+
+        C = sdmm_algorithm(A, B, delta=delta)
+
+        errs.append(np.linalg.norm(A @ B - C, "fro"))
+
+    errors.append(errs)
+    err = fmean(errs)
+    ave_errors.append(err)
+
+ax2.semilogy(colluding, ave_errors, "b.-", label=r"$m = 2, n = 2$")
+
+# mean error for each delta
+ave_errors = []
+
+# raw data of all errors
+errors = []
+
+for X in colluding:
+
+    sdmm_algorithm = AnalogGASP(m=3, n=3, X=X)
+
+    errs = []
+
+    for _ in range(ROUNDS):
+
+        A = np.random.normal(loc=0.0, scale=1.0, size=(t, s))
+        B = np.random.normal(loc=0.0, scale=1.0, size=(s, r))
+
+        C = sdmm_algorithm(A, B, delta=delta)
+
+        errs.append(np.linalg.norm(A @ B - C, "fro"))
+
+    errors.append(errs)
+    err = fmean(errs)
+    ave_errors.append(err)
+
+ax2.semilogy(colluding, ave_errors, "b.--", label=r"$m = 3, n = 3$")
+
+ax2.set_xlabel("colluding workers (X)")
+ax2.set_ylabel("error")
+ax2.grid()
+ax2.legend(loc="lower right")
 
 plt.savefig("plot.eps")
 plt.show()
